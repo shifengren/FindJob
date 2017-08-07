@@ -112,7 +112,7 @@ class BSTree{
         BSTreeNode root = this.root;
         if(root == null){
             this.root = new BSTreeNode(ele);
-            return;
+            //return;
         }
 
         while(root != null){

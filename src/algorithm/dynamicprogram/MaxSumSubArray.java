@@ -11,7 +11,7 @@ import java.util.Scanner;
      例如输入的数组为1, -2, 3, 10, -4, 7, 2, -5，和最大的子数组为3, 10, -4, 7, 2，
      因此输出为该子数组的和18。
 
-     解法见我的博客: www.jianshu.com/p/04c03059e538
+     其他解法以及详细的证明，见我的博客: www.jianshu.com/p/04c03059e538
  */
 public class MaxSumSubArray {
 
@@ -54,6 +54,9 @@ public class MaxSumSubArray {
         }
         return new int[]{sidx, eidx};
     }
+
+
+
 
     public static void main(String[] args){
 
