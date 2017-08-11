@@ -43,6 +43,7 @@ public class Sunday {
         for(int i=0; i<T.length(); i++){
             moveLen[T.charAt(i)] = T.length() - i;
         }
+        return moveLen;
     }
 
 }
