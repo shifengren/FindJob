@@ -30,11 +30,11 @@ public class RedBlackTree<Key extends Comparable<Key>, Value> {
         return x.color == RED;
     }
 
-    public Value get(Key key) {
+    public Node get(Node root, Key key) {
         Node x = root;
         while (x != null) {
             int cmp = key.compareTo(x.key);
-            if (cmp == 0) return x.val;
+            if (cmp == 0) return x;
             else if (cmp < 0) x = x.left;
             else x = x.right;
         }
@@ -162,7 +162,7 @@ public class RedBlackTree<Key extends Comparable<Key>, Value> {
     private Node delete(Node h, Key key){
         if(key.compareTo(h.key) <0){
             if(!isRed(h.left) && !isRed(h.left.left)){
-                h = moveRedRight();
+                h = moveRedRight(h);
             }
             h.left = delete(h.left, key);
         }else{
@@ -173,7 +173,7 @@ public class RedBlackTree<Key extends Comparable<Key>, Value> {
             if(!isRed(h.right) && !isRed(h.right.left))
                 h = moveRedRight(h);
             if(key.compareTo(h.key)==0){
-                h.val = get(h.right, min(h.right).key);
+                h.val = get(h.right, min(h.right).key).val;
                 h.key = min(h.right).key;
                 h.right = deleteMin(h.right);
             }
