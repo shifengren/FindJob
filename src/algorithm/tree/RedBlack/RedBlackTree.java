@@ -1,4 +1,4 @@
-package algorithm.tree;
+package algorithm.tree.RedBlack;
 
 /**
  * Implementation RB-Tree for learning
@@ -152,6 +152,7 @@ public class RedBlackTree<Key extends Comparable<Key>, Value> {
             h = rotateRight(h);
             colorFlip(h);
         }
+        return h;
     }
 
 
