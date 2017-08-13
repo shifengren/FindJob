@@ -68,8 +68,8 @@ public class CmpAry {
                     }
                 }
                 swap(C[i], C[back+1]);
-                back--;
-                bj = A[k];
+                back++;
+//                bj = A[k];
             }else if(A[k] < bj){
                 for (i=front-1; i>=0; --i){
                     if(A[k]==B[C[i].idxB]){
@@ -79,8 +79,8 @@ public class CmpAry {
                     }
                 }
                 swap(C[i], C[front-1]);
-                front++;
-                bj = A[k];
+                front--;
+//                bj = A[k];
             }
             // 调整C数组，使front和back之间都带有=符号
             // 令bj = A[k]
