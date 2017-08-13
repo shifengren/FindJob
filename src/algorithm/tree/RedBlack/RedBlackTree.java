@@ -1,5 +1,7 @@
 package algorithm.tree.RedBlack;
 
+import java.util.TreeMap;
+
 /**
  * Implementation RB-Tree for learning
  *
@@ -41,9 +43,6 @@ public class RedBlackTree<Key extends Comparable<Key>, Value> {
         return null;
     }
 
-    public void put(Key key, Value val) {
-
-    }
 
     public Node min(Node root) {
         Node x = root;
@@ -109,11 +108,16 @@ public class RedBlackTree<Key extends Comparable<Key>, Value> {
         root.color = BLACK;
     }
     private Node deleteMin(Node h){
+
+        // remove node on bottom level
+        // h must be RED by invariant
         if(h.left == null) return null;
 
+        // push red link down if necessary
         if(!isRed(h.left) && !isRed(h.left.left))
             h = moveRedLeft(h);
 
+        // move down on level
         h.left = deleteMin(h.left);
 
         return fixUp(h);
@@ -124,19 +128,23 @@ public class RedBlackTree<Key extends Comparable<Key>, Value> {
         root.color = BLACK;
     }
     private Node deleteMax(Node h){
+
+        // lean 3-nodes to the right
         if(isRed(h.left))
             h = rotateRight(h);
 
+        // remove node on bottom level, h must be RED by invariant
         if(h.right ==null)
             return null;
-
+        // borrow from sibling if necessary
         if(!isRed(h.right) && !isRed(h.right.left))
             h = moveRedRight(h);
 
-        h.left = deleteMax(h.left);
+        // move down to one level, why h.left?
+        h.right = deleteMax(h.right);
         return fixUp(h);
     }
-    private Node moveRedRight(Node h){
+    private Node moveRedRight(Node h) {
         colorFlip(h);
         if(isRed(h.left.left)){
             h = rotateRight(h);
@@ -161,21 +169,25 @@ public class RedBlackTree<Key extends Comparable<Key>, Value> {
         root.color = BLACK;
     }
     private Node delete(Node h, Key key){
-        if(key.compareTo(h.key) <0){
+        if(key.compareTo(h.key) < 0){
             if(!isRed(h.left) && !isRed(h.left.left)){
                 h = moveRedRight(h);
             }
             h.left = delete(h.left, key);
-        }else{
+        } else {
+
             if(isRed(h.left))
                 h = rotateRight(h);
+
             if(key.compareTo(h.key) ==0 && h.right==null)
                 return  null;
+
             if(!isRed(h.right) && !isRed(h.right.left))
                 h = moveRedRight(h);
+
             if(key.compareTo(h.key)==0){
-                h.val = get(h.right, min(h.right).key).val;
                 h.key = min(h.right).key;
+                h.val = get(h.right, h.key).val;
                 h.right = deleteMin(h.right);
             }
             else h.right = delete(h.right, key);
@@ -210,6 +222,6 @@ public class RedBlackTree<Key extends Comparable<Key>, Value> {
     }
 
     public static void main(String[] args) {
-
+        TreeMap tm = null;
     }
 }
