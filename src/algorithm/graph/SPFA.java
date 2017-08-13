@@ -71,6 +71,9 @@ public class SPFA {
     private static class Edge{
         int e;// 边终点
         int val; // 边权值
+
+        int cost; // for 浙大上机
+
         Edge next;
         public Edge(int e, int val, Edge next){
             this.e = e;
@@ -104,7 +107,7 @@ public class SPFA {
      * 松弛操作
      */
     static int relax(int[] dist, int s, int e, int val){
-        if(dist[s]+val < dist[e]){
+        if(dist[s] + val < dist[e]){
             dist[e] = dist[s] + val;
             return 1;
         }
@@ -189,4 +192,64 @@ public class SPFA {
         return 1;
     }
 
+
+    // solver for 浙大复式题目
+    /**
+     * SPFA有负权回路返回0,否则返回1并且最短路径保存在dis[]
+     * @param G graph represented by adjancent List
+     * @param n number of vertexes
+     * @param s0 start point
+     */
+    static int spfa_bfs_solver(Vertex[] G, int n, int s0){
+        Deque<Integer> queue = new ArrayDeque();
+        boolean[] vis = new boolean[n];
+        int[] cnt = new int[n]; // cnt[i] 节点i进入队列的次数
+        int[] dist = new int[n]; // dist[i] 开始节点 到节点i的最短距离
+        int[] cost = new int[n];
+        for(int i=0; i<dist.length; ++i){
+            dist[i] = Integer.MAX_VALUE;
+            cost[i] = -1;
+        }
+        dist[s0] = 0; cost[s0] = 0;
+
+        queue.offerLast(s0);
+        vis[s0]=true;
+        cnt[s0]++;
+
+        while(!queue.isEmpty()){
+            // 出队列
+            int s = queue.pollFirst();
+            // 不在队列中，则消除标记
+            vis[s] = false;
+            Edge p = G[s].head;
+            while(p!=null){
+                // 松弛，如果松弛成功，则更新花费 (寻找最短距离，并使最短路径的花费尽可能小, 所以最短距离优先，花费次之)
+                if(relax(dist, s, p.e, p.val)==1){
+                    
+                    cost[p.e] = cost[s] + p.cost;
+
+                    if(!vis[p.e]){
+                        queue.offerLast(p.e);
+                        vis[p.e] = true;
+                        cnt[p.e]++;
+                        if(cnt[p.e] > n){ // 存在负权环
+                            return 0;
+                        }
+                    }
+
+                }else if(dist[p.e] == dist[s] + p.val){
+                    // 距离相同，选取花费最小的
+                    if(cost[p.e] > cost[s] + p.cost){
+                        cost[p.e] = cost[s] + p.cost;
+                        if(!vis[p.e]){
+                            queue.offerLast(p.e);
+                            vis[p.e]=true;
+                        }
+                    }
+                }
+                p = p.next;
+            }
+        }
+        return 1;
+    }
 }
