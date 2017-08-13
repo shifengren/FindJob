@@ -218,7 +218,7 @@ public class BigInt {
 
         c.sign = a.sign * b.sign;
         c.lastDigitIdx = c.size() - 1;
-        
+
         zeroJustify(c);
         return c;
     }
