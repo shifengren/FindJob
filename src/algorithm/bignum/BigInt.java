@@ -10,7 +10,7 @@ public class BigInt {
     private static final int MINUS = -1;
     private static final int MAXSIZE = 100000;
 
-    // 从右向左存储，每位数字用一个字节表示, 最`右边`是高位，`左边`时低位
+    // 每位数字用一个字节表示, 最`右边`是高位，`左边`时低位
     char[] digits;
     int sign;  // PLUS or MINUS
     int lastDigitIdx; // 最高位所对应的下标
