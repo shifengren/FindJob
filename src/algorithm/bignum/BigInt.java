@@ -14,34 +14,38 @@ public class BigInt {
     char[] digits;
     int sign;  // PLUS or MINUS
     int lastDigitIdx; // 最高位所对应的下标
-    int size=0; // number of digits;
+    int size = 0; // number of digits;
 
-    public BigInt(){
+    public BigInt() {
         this(MAXSIZE);
     }
-    public BigInt(int capacity){
+
+    public BigInt(int capacity) {
         digits = new char[capacity];
         sign = PLUS;
     }
-    public BigInt(String numStr){
+
+    public BigInt(String numStr) {
         sign = numStr.charAt(0) == '-' ? MINUS : PLUS;
-        size = sign==PLUS ? numStr.length() : numStr.length()-1;
+        size = sign == PLUS ? numStr.length() : numStr.length() - 1;
         lastDigitIdx = 0;
         digits = new char[size];
-        int limit = sign==MINUS ? 1 : 0;
-        for(int i=numStr.length()-1; i>=limit; --i){
+        int limit = sign == MINUS ? 1 : 0;
+        for (int i = numStr.length() - 1; i >= limit; --i) {
             digits[lastDigitIdx++] = numStr.charAt(i);
         }
         lastDigitIdx--;
     }
-    public int size(){
+
+    public int size() {
         return this.size;
     }
-//    @Override
+
+    //    @Override
     public String toString() {
         String s = "";
         if (sign == MINUS) s = "-";
-        for(int i=lastDigitIdx; i>=0; --i)
+        for (int i = lastDigitIdx; i >= 0; --i)
             s += digits[i];
         return s;
     }
@@ -52,7 +56,7 @@ public class BigInt {
     // case3. (+a) + (-b) = a-b[变减法];  case 4. (-a) + (+b) = b-a[变减法];
     public static BigInt plus(BigInt a, BigInt b) {
         // 两数相加，和的最大位数 = Max(a.size(), b.size())+1;
-        BigInt c = new BigInt(Math.max(a.size(), b.size())+1);
+        BigInt c = new BigInt(Math.max(a.size(), b.size()) + 1);
         if (a.sign == b.sign) { // case 1,2
             c.sign = a.sign;
             plusAbs(a, b, c);
@@ -79,11 +83,11 @@ public class BigInt {
     public static void plusAbs(BigInt a, BigInt b, BigInt c) {
         c.lastDigitIdx = Math.max(a.lastDigitIdx, b.lastDigitIdx);
         int carry = 0;
-        int ai=0, bi=0;
+        int ai = 0, bi = 0;
         for (int i = 0; i <= c.lastDigitIdx; ++i) {
-            ai = i < a.size() ? (a.digits[i]-'0') : 0;
-            bi = i < b.size() ? (b.digits[i]-'0') : 0;
-            int tmp = (carry + (ai+bi));
+            ai = i < a.size() ? (a.digits[i] - '0') : 0;
+            bi = i < b.size() ? (b.digits[i] - '0') : 0;
+            int tmp = (carry + (ai + bi));
             c.digits[i] = (char) (tmp % 10 + '0');
             carry = tmp / 10;
         }
@@ -113,15 +117,15 @@ public class BigInt {
     // (+a) + (-b) = (a-b) [变减法];  (-a) + (+b) = b-a [变减法];
 
     // 减法
-    // 1. (+a) - (+b) = (a-b) [减法];  2. (-a) - (+b) = -(a+b) [变加法]
-    // 3. (+a) - (-b) = +(a+b) [变加法];  4. (-a) - (-b) = (b-a) [减法]
+    // case1. (+a) - (+b) = (a-b) [减法];  case2. (-a) - (+b) = -(a+b) [变加法]
+    // case3. (+a) - (-b) = +(a+b) [变加法];  case4. (-a) - (-b) = (b-a) [减法]
 
     // 减法中的符号处理
     // 首先判断两个数中是否至少有一个是负数, 若是，则改变减数的符号，然后执行加法
     // 直接计算前，先要比较a和b的绝对值
     public static BigInt sub(BigInt a, BigInt b) { // c = a-b
-        BigInt c = new BigInt(Math.max(a.size(), b.size())+1);
-        if (a.sign == b.sign) { // 1, 4
+        BigInt c = new BigInt(Math.max(a.size(), b.size()) + 1);
+        if (a.sign == b.sign) { // case1, case4
             // 比较绝对值
             if (compare(a, b) == PLUS) { // a>b
                 c.sign = PLUS;
@@ -130,7 +134,7 @@ public class BigInt {
                 c.sign = MINUS;
                 subAbs(b, a, c);
             }
-        } else { // 2,3
+        } else { // case2,case3
             c.sign = a.sign;
             plusAbs(a, b, c);
         }
@@ -144,10 +148,10 @@ public class BigInt {
     public static void subAbs(BigInt a, BigInt b, BigInt c) { // c = a-b s.t a>=b
         c.lastDigitIdx = Math.max(a.lastDigitIdx, b.lastDigitIdx);
         int borrow = 0;
-        int ai=0, bi=0;
+        int ai = 0, bi = 0;
         for (int i = 0; i <= c.lastDigitIdx; ++i) {
-            ai = i<a.size() ? (a.digits[i] - '0') : 0;
-            bi = i<b.size() ? (b.digits[i] - '0') : 0;
+            ai = i < a.size() ? (a.digits[i] - '0') : 0;
+            bi = i < b.size() ? (b.digits[i] - '0') : 0;
             int v = (ai - borrow - bi);
             if (ai > 0)
                 borrow = 0;
@@ -156,7 +160,7 @@ public class BigInt {
                 v += 10;
                 borrow = 1;
             }
-            c.digits[i] = (char)((v + '0'));
+            c.digits[i] = (char) ((v + '0'));
         }
         zeroJustify(c);
     }
@@ -194,6 +198,31 @@ public class BigInt {
     }
 
 
+    public static BigInt multiply(BigInt a, BigInt b) {
+        BigInt c = new BigInt(a.size() + b.size() + 1);
+        c.size = a.size() + b.size() + 1;
+
+        for (int i = 0; i < a.size(); ++i) {
+            for (int j = 0; j < b.size(); ++j) {
+                int ai = a.digits[i] - '0';
+                int bi = b.digits[i] - '0';
+                int tmp = ai * bi;
+                tmp += (c.digits[i + j] == '\0') ? 0 : (c.digits[i + j] - '0');
+                if (tmp >= 10) {
+                    c.digits[i + j + 1] = (char) (tmp / 10 - '0');
+                    c.digits[i + j] = (char) (tmp % 10 - '0');
+                } else c.digits[i + j] = (char) (tmp - '0');
+
+            }
+        }
+
+        c.sign = a.sign * b.sign;
+        c.lastDigitIdx = c.size() - 1;
+        
+        zeroJustify(c);
+        return c;
+    }
+
     public static void main(String[] args) {
 
         BigInt n1 = new BigInt("123456");
@@ -202,6 +231,18 @@ public class BigInt {
         BigInt c = BigInt.sub(n1, n2);
 
         System.out.println(c);
+
+        char[] x = new char[5];
+        for (int i = 0; i < 5; ++i) {
+            System.out.println(x[i]);
+            x[i] = '\0';
+        }
+        System.out.print("/////////////////////////////////////////////\n");
+        for (int i = 0; i < 5; ++i) {
+            System.out.println(x[i]);
+            x[i] = '\0';
+        }
+
 
     }
 
