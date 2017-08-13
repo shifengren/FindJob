@@ -31,6 +31,7 @@ public class CmpAry {
         Cache[] C = new Cache[A.length];
         for(int i=0; i<C.length; ++i) C[i] = new Cache();
 
+        // ai的选择影响效率，最佳的ai是数组元素的中间值
         int ai = A[0]; // randomly select a value from A
 
         int back = A.length-1, front = 0;
