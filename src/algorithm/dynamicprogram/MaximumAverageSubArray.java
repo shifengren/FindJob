@@ -60,6 +60,7 @@ public class MaximumAverageSubArray {
 
     /**
      * 斜率优化方案O(N)
+     * 该算法不能处理序列中含有负数的情况
      */
     public double maxAverage(int[] A, int k) {
         int[] sum = new int[A.length + 1];
