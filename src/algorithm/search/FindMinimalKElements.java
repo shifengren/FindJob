@@ -45,7 +45,37 @@ public class FindMinimalKElements {
             }
         }
         return left;
+    }
 
+
+    private static int findKth(int[] array, int k) {
+        int i = 0, j = array.length - 1;
+        int p;
+        while (true) {
+            p = partition(array, i, j);
+            if (p > k) j = p - 1;
+            else if (p < k) i = p + 1;
+            else break;
+        }
+        return array[p];
+    }
+    private static int partition(int[] array, int low, int high) {
+        // use element at position `low` as privot element
+        int pivot = array[low];
+        int i = low;
+        int j = high + 1;
+        while (i < j) {
+            for (i++; i < high && array[i] < pivot; i++) ;
+            for (j--; j > low && array[j] > pivot; j--) ;
+            if (i < j) swap(array, i, j);
+        }
+        swap(array, low, j);
+        return j;
+    }
+    private static void swap(int[] array, int i, int j) {
+        int t = array[j];
+        array[j] = array[i];
+        array[i] = t;
     }
 
     public static void main(String[] args) {
